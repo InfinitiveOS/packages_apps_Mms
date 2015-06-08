@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2015 SlimRoms Project
+* Copyright (C) 2015 InfinitiveOS Project
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package com.android.mms.data.slim;
+package com.android.mms.data.io;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -24,8 +24,8 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import com.android.mms.ui.MessagingPreferenceActivity;
 
-public class SlimConversationSettings {
-    private static final String TAG = "SlimConversationSettings";
+public class IoConversationSettings {
+    private static final String TAG = "IoConversationSettings";
 
     private Context mContext;
     /* package */
@@ -35,12 +35,12 @@ public class SlimConversationSettings {
     int mVibrateEnabled;
     String mVibratePattern;
 
-    private static final int DEFAULT_NOTIFICATION_ENABLED = SlimMmsDatabaseHelper.DEFAULT;
+    private static final int DEFAULT_NOTIFICATION_ENABLED = IoMmsDatabaseHelper.DEFAULT;
     private static final String DEFAULT_NOTIFICATION_TONE = "";
-    private static final int DEFAULT_VIBRATE_ENABLED = SlimMmsDatabaseHelper.DEFAULT;
+    private static final int DEFAULT_VIBRATE_ENABLED = IoMmsDatabaseHelper.DEFAULT;
     private static final String DEFAULT_VIBRATE_PATTERN = "";
 
-    private SlimConversationSettings(Context context, long threadId, int notificationEnabled,
+    private IoConversationSettings(Context context, long threadId, int notificationEnabled,
         String notificationTone, int vibrateEnabled, String vibratePattern) {
         mContext = context;
         mThreadId = threadId;
@@ -50,21 +50,21 @@ public class SlimConversationSettings {
         mVibratePattern = vibratePattern;
     }
 
-    public static SlimConversationSettings getOrNew(Context context, long threadId) {
-        SlimMmsDatabaseHelper helper = SlimMmsDatabaseHelper.getInstance(context);
+    public static IoConversationSettings getOrNew(Context context, long threadId) {
+        IoMmsDatabaseHelper helper = IoMmsDatabaseHelper.getInstance(context);
         SQLiteDatabase db = helper.getReadableDatabase();
-        Cursor cursor = db.query(SlimMmsDatabaseHelper.CONVERSATIONS_TABLE,
-            SlimMmsDatabaseHelper.CONVERSATIONS_COLUMNS,
+        Cursor cursor = db.query(IoMmsDatabaseHelper.CONVERSATIONS_TABLE,
+            IoMmsDatabaseHelper.CONVERSATIONS_COLUMNS,
             " thread_id = ?",
             new String[] { String.valueOf(threadId) },
             null, null, null, null);
 
         // we should only have one result
         int count = cursor.getCount();
-        SlimConversationSettings convSetting;
+        IoConversationSettings convSetting;
         if (cursor != null && count == 1) {
             cursor.moveToFirst();
-            convSetting = new SlimConversationSettings(context,
+            convSetting = new IoConversationSettings(context,
                 threadId,
                 cursor.getInt(1),
                 cursor.getString(2),
@@ -75,24 +75,24 @@ public class SlimConversationSettings {
             Log.wtf(TAG, "More than one settings with the same thread id is returned!");
             return null;
         } else {
-            convSetting = new SlimConversationSettings(context, threadId,
+            convSetting = new IoConversationSettings(context, threadId,
                 DEFAULT_NOTIFICATION_ENABLED, DEFAULT_NOTIFICATION_TONE,
                 DEFAULT_VIBRATE_ENABLED, DEFAULT_VIBRATE_PATTERN);
 
-            helper.insertSlimConversationSettings(convSetting);
+            helper.insertIoConversationSettings(convSetting);
         }
 
         return convSetting;
     }
 
     public static void delete(Context context, long threadId) {
-        SlimMmsDatabaseHelper helper = SlimMmsDatabaseHelper.getInstance(context);
-        helper.deleteSlimConversationSettings(threadId);
+        IoMmsDatabaseHelper helper = IoMmsDatabaseHelper.getInstance(context);
+        helper.deleteIoConversationSettings(threadId);
     }
 
     public static void deleteAll(Context context) {
-        SlimMmsDatabaseHelper helper = SlimMmsDatabaseHelper.getInstance(context);
-        helper.deleteAllSlimConversationSettings();
+        IoMmsDatabaseHelper helper = IoMmsDatabaseHelper.getInstance(context);
+        helper.deleteAllIoConversationSettings();
     }
 
     public long getThreadId() {
@@ -100,24 +100,24 @@ public class SlimConversationSettings {
     }
 
     public boolean getNotificationEnabled() {
-        if (mNotificationEnabled == SlimMmsDatabaseHelper.DEFAULT) {
+        if (mNotificationEnabled == IoMmsDatabaseHelper.DEFAULT) {
             SharedPreferences sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(mContext);
             return sharedPreferences.getBoolean(MessagingPreferenceActivity.NOTIFICATION_ENABLED,
-                DEFAULT_NOTIFICATION_ENABLED == SlimMmsDatabaseHelper.TRUE);
+                DEFAULT_NOTIFICATION_ENABLED == IoMmsDatabaseHelper.TRUE);
         }
-        return mNotificationEnabled == SlimMmsDatabaseHelper.TRUE;
+        return mNotificationEnabled == IoMmsDatabaseHelper.TRUE;
     }
 
     public void setNotificationEnabled(boolean enabled) {
-        mNotificationEnabled = enabled ? SlimMmsDatabaseHelper.TRUE : SlimMmsDatabaseHelper.FALSE;
+        mNotificationEnabled = enabled ? IoMmsDatabaseHelper.TRUE : IoMmsDatabaseHelper.FALSE;
         setNotificationEnabled(mNotificationEnabled);
     }
 
     public void setNotificationEnabled(int enabled) {
-        SlimMmsDatabaseHelper helper = SlimMmsDatabaseHelper.getInstance(mContext);
-        helper.updateSlimConversationSettingsField(mThreadId,
-            SlimMmsDatabaseHelper.CONVERSATIONS_NOTIFICATION_ENABLED, enabled);
+        IoMmsDatabaseHelper helper = IoMmsDatabaseHelper.getInstance(mContext);
+        helper.updateIoConversationSettingsField(mThreadId,
+            IoMmsDatabaseHelper.CONVERSATIONS_NOTIFICATION_ENABLED, enabled);
     }
 
     public String getNotificationTone() {
@@ -132,30 +132,30 @@ public class SlimConversationSettings {
 
     public void setNotificationTone(String tone) {
         mNotificationTone = tone;
-        SlimMmsDatabaseHelper helper = SlimMmsDatabaseHelper.getInstance(mContext);
-        helper.updateSlimConversationSettingsField(mThreadId,
-            SlimMmsDatabaseHelper.CONVERSATIONS_NOTIFICATION_TONE, tone);
+        IoMmsDatabaseHelper helper = IoMmsDatabaseHelper.getInstance(mContext);
+        helper.updateIoConversationSettingsField(mThreadId,
+            IoMmsDatabaseHelper.CONVERSATIONS_NOTIFICATION_TONE, tone);
     }
 
     public boolean getVibrateEnabled() {
-        if (mVibrateEnabled == SlimMmsDatabaseHelper.DEFAULT) {
+        if (mVibrateEnabled == IoMmsDatabaseHelper.DEFAULT) {
             SharedPreferences sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(mContext);
             return sharedPreferences.getBoolean(MessagingPreferenceActivity.NOTIFICATION_VIBRATE,
-                DEFAULT_VIBRATE_ENABLED == SlimMmsDatabaseHelper.TRUE);
+                DEFAULT_VIBRATE_ENABLED == IoMmsDatabaseHelper.TRUE);
         }
-        return mVibrateEnabled == SlimMmsDatabaseHelper.TRUE;
+        return mVibrateEnabled == IoMmsDatabaseHelper.TRUE;
     }
 
     public void setVibrateEnabled(boolean enabled) {
-        mVibrateEnabled = enabled ? SlimMmsDatabaseHelper.TRUE : SlimMmsDatabaseHelper.FALSE;
+        mVibrateEnabled = enabled ? IoMmsDatabaseHelper.TRUE : IoMmsDatabaseHelper.FALSE;
         setVibrateEnabled(mVibrateEnabled);
     }
 
     public void setVibrateEnabled(int enabled) {
-        SlimMmsDatabaseHelper helper = SlimMmsDatabaseHelper.getInstance(mContext);
-        helper.updateSlimConversationSettingsField(mThreadId,
-            SlimMmsDatabaseHelper.CONVERSATIONS_VIBRATE_ENABLED, enabled);
+        IoMmsDatabaseHelper helper = IoMmsDatabaseHelper.getInstance(mContext);
+        helper.updateIoConversationSettingsField(mThreadId,
+            IoMmsDatabaseHelper.CONVERSATIONS_VIBRATE_ENABLED, enabled);
     }
 
     public String getVibratePattern() {
@@ -170,9 +170,9 @@ public class SlimConversationSettings {
 
     public void setVibratePattern(String pattern) {
         mVibratePattern = pattern;
-        SlimMmsDatabaseHelper helper = SlimMmsDatabaseHelper.getInstance(mContext);
-        helper.updateSlimConversationSettingsField(mThreadId,
-            SlimMmsDatabaseHelper.CONVERSATIONS_VIBRATE_PATTERN, pattern);
+        IoMmsDatabaseHelper helper = IoMmsDatabaseHelper.getInstance(mContext);
+        helper.updateIoConversationSettingsField(mThreadId,
+            IoMmsDatabaseHelper.CONVERSATIONS_VIBRATE_PATTERN, pattern);
     }
 
     public void resetToDefault() {
@@ -180,7 +180,7 @@ public class SlimConversationSettings {
         mNotificationTone = DEFAULT_NOTIFICATION_TONE;
         mVibrateEnabled = DEFAULT_VIBRATE_ENABLED;
         mVibratePattern = DEFAULT_VIBRATE_PATTERN;
-        SlimMmsDatabaseHelper helper = SlimMmsDatabaseHelper.getInstance(mContext);
-        helper.updateSlimConversationSettings(this);
+        IoMmsDatabaseHelper helper = IoMmsDatabaseHelper.getInstance(mContext);
+        helper.updateIoConversationSettings(this);
     }
 }

@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2015 SlimRoms Project
+* Copyright (C) 2015 InfinitiveOS Project
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package com.android.mms.data.slim;
+package com.android.mms.data.io;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -21,7 +21,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-public class SlimMmsDatabaseHelper extends SQLiteOpenHelper {
+public class IoMmsDatabaseHelper extends SQLiteOpenHelper {
     public static final int TRUE = 1;
     public static final int FALSE = 0;
     public static final int DEFAULT = 2;
@@ -45,18 +45,18 @@ public class SlimMmsDatabaseHelper extends SQLiteOpenHelper {
             + CONVERSATIONS_VIBRATE_ENABLED + " INTEGER, "
             + CONVERSATIONS_VIBRATE_PATTERN + " TEXT"
             + ");";
-    private static final String TAG = "SlimMmsDatabaseHelper";
-    private static final String DATABASE_NAME = "slim_mms.db";
+    private static final String TAG = "IoMmsDatabaseHelper";
+    private static final String DATABASE_NAME = "Io_mms.db";
     private static final int DATABASE_VERSION = 1;
-    private static SlimMmsDatabaseHelper mInstance;
+    private static IoMmsDatabaseHelper mInstance;
 
-    private SlimMmsDatabaseHelper(Context context) {
+    private IoMmsDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    public static SlimMmsDatabaseHelper getInstance(Context context) {
+    public static IoMmsDatabaseHelper getInstance(Context context) {
         if (mInstance == null) {
-            mInstance = new SlimMmsDatabaseHelper(context.getApplicationContext());
+            mInstance = new IoMmsDatabaseHelper(context.getApplicationContext());
         }
         return mInstance;
     }
@@ -73,7 +73,7 @@ public class SlimMmsDatabaseHelper extends SQLiteOpenHelper {
         Log.d(TAG, "Updating db");
     }
 
-    public void insertSlimConversationSettings(SlimConversationSettings conversationSettings) {
+    public void insertIoConversationSettings(IoConversationSettings conversationSettings) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(CONVERSATIONS_THREAD_ID, conversationSettings.mThreadId);
@@ -86,7 +86,7 @@ public class SlimMmsDatabaseHelper extends SQLiteOpenHelper {
     }
 
     // boolean version
-    public void updateSlimConversationSettingsField(long threadId, String field, int value) {
+    public void updateIoConversationSettingsField(long threadId, String field, int value) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(field, value);
@@ -97,7 +97,7 @@ public class SlimMmsDatabaseHelper extends SQLiteOpenHelper {
     }
 
     // string version
-    public void updateSlimConversationSettingsField(long threadId, String field, String value) {
+    public void updateIoConversationSettingsField(long threadId, String field, String value) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(field, value);
@@ -107,7 +107,7 @@ public class SlimMmsDatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void updateSlimConversationSettings(SlimConversationSettings conversationSettings) {
+    public void updateIoConversationSettings(IoConversationSettings conversationSettings) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(CONVERSATIONS_NOTIFICATION_ENABLED, conversationSettings.mNotificationEnabled);
@@ -119,14 +119,14 @@ public class SlimMmsDatabaseHelper extends SQLiteOpenHelper {
                 new String[]{String.valueOf(conversationSettings.mThreadId)});
     }
 
-    public void deleteSlimConversationSettings(long threadId) {
+    public void deleteIoConversationSettings(long threadId) {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(CONVERSATIONS_TABLE,
                 " " + CONVERSATIONS_THREAD_ID + " = ?",
                 new String[]{String.valueOf(threadId)});
     }
 
-    public void deleteAllSlimConversationSettings() {
+    public void deleteAllIoConversationSettings() {
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("DELETE FROM " + CONVERSATIONS_TABLE);
     }

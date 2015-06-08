@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2015 SlimRoms Project
+* Copyright (C) 2015 InfinitiveOS Project
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ import android.widget.Toast;
 import com.android.mms.LogTag;
 import com.android.mms.MmsApp;
 import com.android.mms.R;
-import com.android.mms.data.slim.SlimConversationSettings;
+import com.android.mms.data.io.IoConversationSettings;
 import com.android.mms.transaction.MessagingNotification;
 import com.android.mms.transaction.MmsMessageSender;
 import com.android.mms.ui.ComposeMessageActivity;
@@ -872,7 +872,7 @@ public class Conversation {
 
                 DraftCache.getInstance().setDraftState(threadId, false);
 
-                SlimConversationSettings.delete(MmsApp.getApplication(), threadId);
+                IoConversationSettings.delete(MmsApp.getApplication(), threadId);
             }
         }
     }
@@ -904,7 +904,7 @@ public class Conversation {
             handler.setDeleteToken(token);
             handler.startDelete(token, new Long(-1), Threads.CONTENT_URI, selection, null);
 
-            SlimConversationSettings.deleteAll(app);
+            IoConversationSettings.deleteAll(app);
         }
     }
 

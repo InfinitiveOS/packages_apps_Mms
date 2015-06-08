@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2015 SlimRoms Project
+* Copyright (C) 2015 InfinitiveOS Project
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.MenuItem;
 import com.android.mms.R;
-import com.android.mms.data.slim.SlimConversationSettings;
+import com.android.mms.data.io.IoConversationSettings;
 
 public class ConversationOptionsActivity extends Activity {
     private static final String TAG = "ConversationOptionsActivity";
@@ -57,22 +57,22 @@ public class ConversationOptionsActivity extends Activity {
         private ListPreference mVibratePattern;
         private Preference mResetToDefault;
         private PreferenceCategory mNotificationsCategory;
-        private SlimConversationSettings mConversationSetting;
+        private IoConversationSettings mConversationSetting;
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
 
-            new AsyncTask<Long, Void, SlimConversationSettings>() {
+            new AsyncTask<Long, Void, IoConversationSettings>() {
                 @Override
-                protected SlimConversationSettings doInBackground(Long... params) {
+                protected IoConversationSettings doInBackground(Long... params) {
                     if (DEBUG)
                         Log.d(TAG, "Getting conversation setting of " + params[0]);
-                    return SlimConversationSettings.getOrNew(getActivity(), params[0].longValue());
+                    return IoConversationSettings.getOrNew(getActivity(), params[0].longValue());
                 }
 
                 @Override
-                protected void onPostExecute(SlimConversationSettings conversationSettings) {
+                protected void onPostExecute(IoConversationSettings conversationSettings) {
                     if (DEBUG) {
                         Log.d(TAG, "Conversation setting:"
                             + " notificationEnabled=" +

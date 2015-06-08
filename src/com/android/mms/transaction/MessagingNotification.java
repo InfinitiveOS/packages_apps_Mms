@@ -78,7 +78,7 @@ import com.android.mms.R;
 import com.android.mms.data.Contact;
 import com.android.mms.data.Conversation;
 import com.android.mms.data.WorkingMessage;
-import com.android.mms.data.slim.SlimConversationSettings;
+import com.android.mms.data.io.IoConversationSettings;
 import com.android.mms.model.SlideModel;
 import com.android.mms.model.SlideshowModel;
 import com.android.mms.quickmessage.QmMarkRead;
@@ -442,7 +442,7 @@ public class MessagingNotification {
      * played at half-volume
      */
     private static void playInConversationNotificationSound(Context context, long newThreadId) {
-         SlimConversationSettings conversationSettings = SlimConversationSettings
+         IoConversationSettings conversationSettings = IoConversationSettings
                  .getOrNew(context, newThreadId);
          String ringtoneStr = conversationSettings.getNotificationTone();
         if (TextUtils.isEmpty(ringtoneStr)) {
@@ -1039,7 +1039,7 @@ public class MessagingNotification {
             int uniqueThreadCount,
             SortedSet<NotificationInfo> notificationSet) {
         boolean isNew = newThreadId != THREAD_NONE;
-        SlimConversationSettings conversationSettings = SlimConversationSettings
+        IoConversationSettings conversationSettings = IoConversationSettings
                 .getOrNew(context, newThreadId);
 
         // If the user has turned off notifications in settings, don't do any notifying.
